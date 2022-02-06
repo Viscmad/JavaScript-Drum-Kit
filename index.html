@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JS Drum Kit</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="keys">
+      <div data-key="KeyA" class="key">
+        <kbd>A</kbd>
+        <span class="sound">clap</span>
+      </div>
+      <div data-key="KeyS" class="key">
+        <kbd>S</kbd>
+        <span class="sound">hihat</span>
+      </div>
+      <div data-key="KeyD" class="key">
+        <kbd>D</kbd>
+        <span class="sound">kick</span>
+      </div>
+      <div data-key="KeyF" class="key">
+        <kbd>F</kbd>
+        <span class="sound">openhat</span>
+      </div>
+      <div data-key="KeyG" class="key">
+        <kbd>G</kbd>
+        <span class="sound">boom</span>
+      </div>
+      <div data-key="KeyH" class="key">
+        <kbd>H</kbd>
+        <span class="sound">ride</span>
+      </div>
+      <div data-key="KeyJ" class="key">
+        <kbd>J</kbd>
+        <span class="sound">snare</span>
+      </div>
+      <div data-key="KeyK" class="key">
+        <kbd>K</kbd>
+        <span class="sound">tom</span>
+      </div>
+      <div data-key="KeyL" class="key">
+        <kbd>L</kbd>
+        <span class="sound">tink</span>
+      </div>
+    </div>
+
+    <audio data-key="KeyA" src="sounds/clap.wav"></audio>
+    <audio data-key="KeyS" src="sounds/hihat.wav"></audio>
+    <audio data-key="KeyD" src="sounds/kick.wav"></audio>
+    <audio data-key="KeyF" src="sounds/openhat.wav"></audio>
+    <audio data-key="KeyG" src="sounds/boom.wav"></audio>
+    <audio data-key="KeyH" src="sounds/ride.wav"></audio>
+    <audio data-key="KeyJ" src="sounds/snare.wav"></audio>
+    <audio data-key="KeyK" src="sounds/tom.wav"></audio>
+    <audio data-key="KeyL" src="sounds/tink.wav"></audio>
+
+    <script>
+      /*Notes on <audio> element control:
+       *The `controls` keyword on HTML prop dictates whether the audio clip will be displayed or not.
+       *.play() plays.
+       *.pause() pauses
+       *"paused" is an event callback, can be used to reset the current time to 0, essentially stopping the audio.
+       *"played" is another such thing that can be used to stop other audios unless a special setting is enabled by end user that does not stop other audios when played.
+       *"playing" event is also worth investigating.
+       *elem.src is the attr to change when switching from audio to audio such as piano to hiphop drumpad.
+       *elem.volume look into to set the volume of audios. Range 0.00 - 1.00 in `double`.
+       *"volumechange" event is a callback that can be utilised to do this by hooking the input range to just one file that sees this event happened and sets all of them to the same level.
+       *elem.currentTime sets the current playback time(seek function). `double` with 2 decimaled second precision| e.g - elem.currentTime = 23.45;(value is in seconds - 23.45 seconds)
+       */
+      window.addEventListener("keydown", function (e) {
+        // Used e.code over e.keyCode for non keyboard layout dependent
+        const audio = document.querySelector(`audio[data-key="${e.code}"]`);
+        if (!audio) return;
+        audio.currentTime = 0; // Rewind sound to the start
+        audio.play();
+        const key = document.querySelector(`.key[data-key="${e.code}"]`);
+        key.ontransitionend = () => {
+          key.classList.remove("playing");
+        };
+        key.classList.add("playing");
+      });
+    </script>
+  </body>
+</html>
